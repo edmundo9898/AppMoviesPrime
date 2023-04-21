@@ -1,10 +1,11 @@
 import React, {useState, useEffect} from 'react';
-import { View, StyleSheet, StatusBar, ScrollView} from 'react-native';
+import { View, StyleSheet, Text, StatusBar, ScrollView} from 'react-native';
 import Api from '../../services/api';
+import apiKey from '../../services/apikey';
 import LogoApp from '../../components/logoApp';
 import MovieList from '../../components/movieList';
 import Colors from '../../utils/color';
-const apiKey = 'api_key=2432a73dd847e779cd6daa784c7d8d94';
+
 
 export default function Home() {
 
@@ -12,20 +13,23 @@ export default function Home() {
   const [movieNowPlaying, setMovieNowPlaying] = useState([]);
   const [movieUpComingList, setMovieUpComingList] = useState([]);  
      
+  const [movieId, setMovieId] = useState()
   useEffect(() => {
     
     const loadApi = async () => {
       
       // Filmes populares
-      const response1 = await Api.get(`/movie/popular?${apiKey}&page=${1}`);
+      const response1 = await Api.get(`/movie/popular?${apiKey}&page=${1}&language=pt-BR`);
       setMoviePopular(response1.data.results);
- 
+      
+
+      
       // filmes em cartaz
-      const response2 = await Api.get(`/movie/now_playing?${apiKey}&page=${1}`);
+      const response2 = await Api.get(`/movie/now_playing?${apiKey}&page=${1}&language=pt-BR`);
       setMovieNowPlaying(response2.data.results);
       
       // Próximas Estreais
-      const response3 = await Api.get(`/movie/upcoming?${apiKey}&page=${1}`);
+      const response3 = await Api.get(`/movie/upcoming?${apiKey}&page=${1}&language=pt-BR`);
       setMovieUpComingList(response3.data.results);
     }
 
@@ -45,6 +49,8 @@ export default function Home() {
         <MovieList data={movieNowPlaying} title='Filmes em cartaz'/>
         <MovieList data={movieUpComingList} title='Próximas Estreias'/>
       </ScrollView>
+
+      <Text>{movieId}</Text>
     </View>
    
   )

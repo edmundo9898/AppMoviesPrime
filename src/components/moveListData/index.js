@@ -6,6 +6,8 @@ import {useNavigation} from '@react-navigation/native';
 
 const  MovieListData = ({data}) => {
 
+  
+
   const navigation = useNavigation();
 
  const uri = `https://image.tmdb.org/t/p/w500/${data.poster_path}`;
