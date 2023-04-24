@@ -12,8 +12,7 @@ export default function Home() {
   const [moviePoupular, setMoviePopular] = useState([]);
   const [movieNowPlaying, setMovieNowPlaying] = useState([]);
   const [movieUpComingList, setMovieUpComingList] = useState([]);  
-     
-  const [movieId, setMovieId] = useState()
+
   useEffect(() => {
     
     const loadApi = async () => {
@@ -21,9 +20,7 @@ export default function Home() {
       // Filmes populares
       const response1 = await Api.get(`/movie/popular?${apiKey}&page=${1}&language=pt-BR`);
       setMoviePopular(response1.data.results);
-      
-
-      
+          
       // filmes em cartaz
       const response2 = await Api.get(`/movie/now_playing?${apiKey}&page=${1}&language=pt-BR`);
       setMovieNowPlaying(response2.data.results);
@@ -45,12 +42,10 @@ export default function Home() {
       <StatusBar/>
       <LogoApp/> 
       <ScrollView>   
-        <MovieList  data={moviePoupular} title='Filmes Populares' />
+        <MovieList data={moviePoupular} title='Filmes Populares' />
         <MovieList data={movieNowPlaying} title='Filmes em cartaz'/>
         <MovieList data={movieUpComingList} title='Próximas Estreias'/>
       </ScrollView>
-
-      <Text>{movieId}</Text>
     </View>
    
   )
