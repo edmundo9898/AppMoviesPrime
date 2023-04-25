@@ -6,25 +6,25 @@ import {
   Image,
   StatusBar,
   ScrollView,
+  Dimensions,
 } from "react-native";
 import Color from "../../utils/color";
 import { useRoute } from "@react-navigation/native";
 import api from "../../services/api";
 import apiKey from "../../services/apikey";
-import color from "../../utils/color";
+const { width } = Dimensions.get("window");
 
 export default function Detail() {
   const route = useRoute();
+  // const uri é onde está buscando a imagem do filme
   const uri = `https://image.tmdb.org/t/p/w500/${route.params?.data.poster_path}`;
   const [runtime, setRuntime] = useState(null);
   const [genres, setGenres] = useState([]);
-
-  const limit = 2;
+  const [director, setDirector] = useState([]);
 
   // puxando apenas o ano do lançamento do filme
   const releaseData = route.params?.data.release_date;
   const year = new Date(releaseData).getFullYear();
-  const [director, setDirector] = useState([]);
   // puxando apenas o ano do lançamento do filme
 
   useEffect(() => {
@@ -47,15 +47,13 @@ export default function Detail() {
       );
 
       /* o filter está filtrando se o trabalho da pessoa é de diretor, 
-         se caso for é retornado o array de informações dos diretores */
-      const directors = response3.data.crew.filter(
-        (person) => person.job === "Director"
-      );
+          é retornado o array de informações dos diretores */
+      // o map está retornando apenas os nomes deles no array
+      const directors = response3.data.crew
+        .filter((person) => person.job === "Director")
+        .map((director) => director.name);
 
-      // o map está recebendo o directors que está informando os detalhes dos diretores, e retornando apenas os nomes deles no array
-      const searchDirectors = directors.map((directors) => directors.name);
-
-      setDirector(searchDirectors);
+      setDirector(directors);
     };
     LoadRunTime();
   }, []);
@@ -65,30 +63,34 @@ export default function Detail() {
       <View style={styles.container}>
         <StatusBar />
         <Image source={{ uri }} style={styles.imageDetail} />
+
         <View style={styles.containerInfoMovie}>
           <Text style={styles.titleMovie}>{route.params?.data.title}</Text>
           <View style={styles.containerInfoDetailMovie}>
             <Text style={styles.textInfoDetailMovie}>{year}</Text>
-            {genres.splice(0, 1).map((genre, index) => (
+            <View style={styles.ball}></View>
+
+            {/* o map está retornando o genero do filme. */}
+            {genres.slice(0, 1).map((genre) => (
               <Text style={styles.textInfoDetailMovie} key={genre.id}>
                 {genre.name}
               </Text>
             ))}
-            <Text style={styles.textInfoDetailMovie}>
-              Duração: {runtime} min
-            </Text>
+            <View style={styles.ball}></View>
+            <Text style={styles.textInfoDetailMovie}>{runtime}min</Text>
           </View>
 
-          {director.splice(0, limit).map((personDirector) => (
-            <Text style={styles.text} key={personDirector.id}>
-              {personDirector}
+          {/* o map está retornando os diretores do filme. */}
+          {director.slice(0, 1).map((personDirector) => (
+            <Text style={styles.nameDirector} key={personDirector}>
+              Diretor: {personDirector}
             </Text>
           ))}
         </View>
 
         <Text style={styles.overView}>Sinopse</Text>
 
-        <Text style={styles.text}>{route.params?.data.overview}</Text>
+        <Text style={styles.overViewText}>{route.params?.data.overview}</Text>
       </View>
     </ScrollView>
   );
@@ -101,16 +103,16 @@ const styles = StyleSheet.create({
     backgroundColor: Color.background,
   },
   imageDetail: {
-    width: "70%",
-    borderRadius: 10,
-    height: 350,
-    resizeMode: "contain",
-    marginTop: 10,
+    width: width,
+    /* borderRadius: 10, */
+    height: 400,
+    resizeMode: "stretch",
+    marginTop: 0,
     marginBottom: 20,
   },
   containerInfoMovie: {
     width: "100%",
-    borderWidth: 2,
+    paddingStart: 14,
   },
   titleMovie: {
     color: Color.text,
@@ -119,17 +121,40 @@ const styles = StyleSheet.create({
   },
   containerInfoDetailMovie: {
     flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    marginVertical: 10,
   },
   textInfoDetailMovie: {
+    color: "#e2e2e2",
+    fontWeight: "500",
+    marginEnd: 5,
     fontSize: 15,
-    fontWeight: "bold",
-    color: color.text,
-    marginRight: 10,
   },
-  text: {},
-  overView: {
-    fontSize: 24,
+  ball: {
+    width: 5,
+    height: 5,
+    borderRadius: 20,
+    backgroundColor: "#e2e2e2",
+    marginRight: 5,
+  },
+  nameDirector: {
+    fontSize: 18,
+    color: Color.text,
     fontWeight: "bold",
-    color: color.text,
+  },
+  overView: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: Color.text,
+    marginTop: 23,
+  },
+  overViewText: {
+    fontSize: 15,
+    fontWeight: 500,
+    color: Color.text,
+    padding: 10,
+    lineHeight: 23,
+    textAlign: "justify",
   },
 });
