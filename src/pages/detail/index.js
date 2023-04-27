@@ -7,12 +7,15 @@ import {
   StatusBar,
   ScrollView,
   Dimensions,
+  SectionList,
 } from "react-native";
 import Color from "../../utils/color";
+import ActorList from "../../components/actorList";
 import { useRoute } from "@react-navigation/native";
 import api from "../../services/api";
 import apiKey from "../../services/apikey";
 const { width } = Dimensions.get("window");
+const { Item: SectionListItem } = SectionList;
 
 export default function Detail() {
   const route = useRoute();
@@ -21,6 +24,7 @@ export default function Detail() {
   const [runtime, setRuntime] = useState(null);
   const [genres, setGenres] = useState([]);
   const [director, setDirector] = useState([]);
+  const [cast, setCast] = useState([]);
 
   // puxando apenas o ano do lançamento do filme
   const releaseData = route.params?.data.release_date;
@@ -42,57 +46,68 @@ export default function Detail() {
       setGenres(response2.data.genres);
 
       // Diretor do filme
+      /* o filter está filtrando se o trabalho da pessoa é de diretor, 
+          é retornado o array de informações dos diretores */
+      // o map está retornando apenas os nomes deles no array
       const response3 = await api.get(
         `/movie/${route.params?.data.id}/credits?${apiKey}&language=pt-BR`
       );
 
-      /* o filter está filtrando se o trabalho da pessoa é de diretor, 
-          é retornado o array de informações dos diretores */
-      // o map está retornando apenas os nomes deles no array
-      const directors = response3.data.crew
-        .filter((person) => person.job === "Director")
-        .map((director) => director.name);
+      const directors = response3.data.crew.filter(
+        (value) => value.job === "Director"
+      );
+      const directorName = directors.map((value) => value.name);
+      setDirector(directorName);
 
-      setDirector(directors);
+      const response4 = await api.get(
+        `/movie/${route.params?.data.id}/credits?${apiKey}&language=pt-BR&fields=cast`
+      );
+      /* console.log(response4.data.cast) */
+      const infoActor = response4.data.cast.filter(
+        (value) => value.id != undefined
+      );
+      setCast(infoActor);
     };
     LoadRunTime();
   }, []);
 
   return (
-    <ScrollView>
-      <View style={styles.container}>
-        <StatusBar />
-        <Image source={{ uri }} style={styles.imageDetail} />
+    <View style={styles.container}>
+      <StatusBar />
+       
+       <ScrollView>
+      <Image source={{ uri }} style={styles.imageDetail} />
 
-        <View style={styles.containerInfoMovie}>
-          <Text style={styles.titleMovie}>{route.params?.data.title}</Text>
-          <View style={styles.containerInfoDetailMovie}>
-            <Text style={styles.textInfoDetailMovie}>{year}</Text>
-            <View style={styles.ball}></View>
+      <View style={styles.containerInfoMovie}>
+        <Text style={styles.titleMovie}>{route.params?.data.title}</Text>
+        <View style={styles.containerInfoDetailMovie}>
+          <Text style={styles.textInfoDetailMovie}>{year}</Text>
+          <View style={styles.ball}></View>
 
-            {/* o map está retornando o genero do filme. */}
-            {genres.slice(0, 1).map((genre) => (
-              <Text style={styles.textInfoDetailMovie} key={genre.id}>
-                {genre.name}
-              </Text>
-            ))}
-            <View style={styles.ball}></View>
-            <Text style={styles.textInfoDetailMovie}>{runtime}min</Text>
-          </View>
+          {/* o map está retornando o genero do filme. slice está limitando em 2, e o join está colocando a barra no meio deles*/}
+          <Text style={styles.textInfoDetailMovie}>
+            {genres
+              .map((value) => value.name)
+              .slice(0, 2)
+              .join("/")}
+          </Text>
 
-          {/* o map está retornando os diretores do filme. */}
-          {director.slice(0, 1).map((personDirector) => (
-            <Text style={styles.nameDirector} key={personDirector}>
-              Diretor: {personDirector}
-            </Text>
-          ))}
+          <View style={styles.ball}></View>
+          <Text style={styles.textInfoDetailMovie}>{runtime}min</Text>
         </View>
 
-        <Text style={styles.overView}>Sinopse</Text>
-
-        <Text style={styles.overViewText}>{route.params?.data.overview}</Text>
+        {/* o slice irar mostrar apenas 2 nomes de diretores, e o join está colocando virgula quando tiver mais de 1 diretor   */}
+        <Text style={styles.nameDirector}>
+          Diretor: {director.slice(0, 2).join(", ")}
+        </Text>
       </View>
-    </ScrollView>
+
+      <Text style={styles.overView}>Sinopse</Text>
+      <Text style={styles.overViewText}>{route.params?.data.overview}</Text>
+
+      <ActorList dataCast={cast} titleCast={"Elenco"} />
+      </ScrollView>
+    </View>
   );
 }
 

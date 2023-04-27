@@ -1,18 +1,17 @@
 import React from "react";
 import { View, Text, StyleSheet, FlatList } from "react-native";
-import MovieListData from "../moveListData";
+import ActorListData from "../actorListData";
 import Color from "../../utils/color";
 
-const MovieList = ({ data, title }) => {
+const ActorList = ({ dataCast, titleCast }) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{title}</Text>
+      <Text style={styles.title}>{titleCast}</Text>
       <FlatList
-        horizontal
         showsHorizontalScrollIndicator={false}
-        data={data}
+        data={dataCast}
         keyExtractor={(item) => String(item.id)}
-        renderItem={({ item }) => <MovieListData data={item} />}
+        renderItem={({ item }) => <ActorListData name={item.name} />}
       />
     </View>
   );
@@ -28,4 +27,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MovieList;
+export default ActorList;
