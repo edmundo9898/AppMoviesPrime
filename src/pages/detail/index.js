@@ -7,24 +7,24 @@ import {
   StatusBar,
   ScrollView,
   Dimensions,
-  SectionList,
 } from "react-native";
 import Color from "../../utils/color";
 import ActorList from "../../components/actorList";
+import MovieList from "../../components/movieList";
 import { useRoute } from "@react-navigation/native";
 import api from "../../services/api";
 import apiKey from "../../services/apikey";
 const { width } = Dimensions.get("window");
-const { Item: SectionListItem } = SectionList;
 
 export default function Detail() {
   const route = useRoute();
   // const uri é onde está buscando a imagem do filme
-  const uri = `https://image.tmdb.org/t/p/w500/${route.params?.data.poster_path}`;
+  const uriImage = `https://image.tmdb.org/t/p/w500/${route.params?.data.poster_path}`;
   const [runtime, setRuntime] = useState(null);
   const [genres, setGenres] = useState([]);
   const [director, setDirector] = useState([]);
   const [cast, setCast] = useState([]);
+  const [movieSimilar, setMovieSimilar] = useState([]);
 
   // puxando apenas o ano do lançamento do filme
   const releaseData = route.params?.data.release_date;
@@ -56,6 +56,7 @@ export default function Detail() {
       const directors = response3.data.crew.filter(
         (value) => value.job === "Director"
       );
+
       const directorName = directors.map((value) => value.name);
       setDirector(directorName);
 
@@ -67,6 +68,13 @@ export default function Detail() {
         (value) => value.id != undefined
       );
       setCast(infoActor);
+       
+      // filmes semelhantes
+      const response5 = await api.get(
+        `/movie/${route.params?.data.id}/similar?${apiKey}&page=${1}&language=pt-BR`
+      );
+      console.log(response5.data);
+      setMovieSimilar(response5.data.results)
     };
     LoadRunTime();
   }, []);
@@ -74,38 +82,39 @@ export default function Detail() {
   return (
     <View style={styles.container}>
       <StatusBar />
-       
-       <ScrollView>
-      <Image source={{ uri }} style={styles.imageDetail} />
 
-      <View style={styles.containerInfoMovie}>
-        <Text style={styles.titleMovie}>{route.params?.data.title}</Text>
-        <View style={styles.containerInfoDetailMovie}>
-          <Text style={styles.textInfoDetailMovie}>{year}</Text>
-          <View style={styles.ball}></View>
+      <ScrollView>
+        <Image source={{ uri: uriImage }} style={styles.imageDetail} />
 
-          {/* o map está retornando o genero do filme. slice está limitando em 2, e o join está colocando a barra no meio deles*/}
-          <Text style={styles.textInfoDetailMovie}>
-            {genres
-              .map((value) => value.name)
-              .slice(0, 2)
-              .join("/")}
+        <View style={styles.containerInfoMovie}>
+          <Text style={styles.titleMovie}>{route.params?.data.title}</Text>
+          <View style={styles.containerInfoDetailMovie}>
+            <Text style={styles.textInfoDetailMovie}>{year}</Text>
+            <View style={styles.ball}></View>
+
+            {/* o map está retornando o genero do filme. slice está limitando em 2, e o join está colocando a barra no meio deles*/}
+            <Text style={styles.textInfoDetailMovie}>
+              {genres
+                .map((value) => value.name)
+                .slice(0, 2)
+                .join("/")}
+            </Text>
+
+            <View style={styles.ball}></View>
+            <Text style={styles.textInfoDetailMovie}>{runtime}min</Text>
+          </View>
+
+          {/* o slice irar mostrar apenas 2 nomes de diretores, e o join está colocando virgula quando tiver mais de 1 diretor   */}
+          <Text style={styles.nameDirector}>
+            Diretor: {director.slice(0, 2).join(", ")}
           </Text>
-
-          <View style={styles.ball}></View>
-          <Text style={styles.textInfoDetailMovie}>{runtime}min</Text>
         </View>
 
-        {/* o slice irar mostrar apenas 2 nomes de diretores, e o join está colocando virgula quando tiver mais de 1 diretor   */}
-        <Text style={styles.nameDirector}>
-          Diretor: {director.slice(0, 2).join(", ")}
-        </Text>
-      </View>
+        <Text style={styles.overView}>Sinopse</Text>
+        <Text style={styles.overViewText}>{route.params?.data.overview}</Text>
 
-      <Text style={styles.overView}>Sinopse</Text>
-      <Text style={styles.overViewText}>{route.params?.data.overview}</Text>
-
-      <ActorList dataCast={cast} titleCast={"Elenco"} />
+        <ActorList dataCast={cast} titleCast="Elenco" />
+        <MovieList data={movieSimilar} title="Filmes recomendados" />
       </ScrollView>
     </View>
   );
@@ -163,6 +172,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: Color.text,
     marginTop: 23,
+    textAlign: "center",
   },
   overViewText: {
     fontSize: 15,

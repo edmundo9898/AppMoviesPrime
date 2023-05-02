@@ -8,22 +8,26 @@ const ActorList = ({ dataCast, titleCast }) => {
     <View style={styles.container}>
       <Text style={styles.title}>{titleCast}</Text>
       <FlatList
+        horizontal
         showsHorizontalScrollIndicator={false}
-        data={dataCast}
+        data={dataCast.slice(0, 10)}
         keyExtractor={(item) => String(item.id)}
-        renderItem={({ item }) => <ActorListData name={item.name} />}
+        renderItem={({ item }) => <ActorListData actorData={item} />}
       />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  container:{
+    width: '100%',
+  },
   title: {
     fontSize: 22,
     fontWeight: "bold",
     color: Color.text,
     marginLeft: 10,
-    marginTop: 15,
+    marginTop: 20,
   },
 });
 
