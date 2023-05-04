@@ -4,7 +4,7 @@ import { TouchableOpacity, Text, Image, StyleSheet } from "react-native";
 export default function actorListData({ actorData }) {
   const uri = `https://image.tmdb.org/t/p/w500/${actorData.profile_path}`;
   return (
-    <TouchableOpacity onPress={() =>console.log(actorData.id)} style={styles.containerButton}>
+    <TouchableOpacity onPress={() => console.log('clicou!!')} style={styles.containerButton}>
       <Image source={{ uri }} style={styles.imageActor} />
       <Text style={styles.text}>{actorData.name}</Text>
     </TouchableOpacity>

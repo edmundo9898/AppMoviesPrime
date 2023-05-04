@@ -10,7 +10,7 @@ const MovieList = ({ data, title }) => {
       <FlatList
         horizontal
         showsHorizontalScrollIndicator={false}
-        data={data.slice(0, 13)}
+        data={data.slice(0, 10)}
         keyExtractor={(item) => String(item.id)}
         renderItem={({ item }) => <MovieListData data={item} />}
       />

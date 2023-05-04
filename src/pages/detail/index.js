@@ -7,24 +7,30 @@ import {
   StatusBar,
   ScrollView,
   Dimensions,
+  TouchableOpacity,
+  Pressable
 } from "react-native";
 import Color from "../../utils/color";
 import ActorList from "../../components/actorList";
 import MovieList from "../../components/movieList";
-import { useRoute } from "@react-navigation/native";
+import { useRoute, useNavigation } from "@react-navigation/native";
 import api from "../../services/api";
 import apiKey from "../../services/apikey";
+import { AntDesign } from "@expo/vector-icons";
 const { width } = Dimensions.get("window");
 
 export default function Detail() {
   const route = useRoute();
   // const uri é onde está buscando a imagem do filme
-  const uriImage = `https://image.tmdb.org/t/p/w500/${route.params?.data.poster_path}`;
+  const uriImage = `https://image.tmdb.org/t/p/original/${route.params?.data.backdrop_path}`;
   const [runtime, setRuntime] = useState(null);
   const [genres, setGenres] = useState([]);
   const [director, setDirector] = useState([]);
   const [cast, setCast] = useState([]);
   const [movieSimilar, setMovieSimilar] = useState([]);
+  const [favorite, setFavorite] = useState(false);
+
+  const navigation = useNavigation();
 
   // puxando apenas o ano do lançamento do filme
   const releaseData = route.params?.data.release_date;
@@ -63,21 +69,42 @@ export default function Detail() {
       const response4 = await api.get(
         `/movie/${route.params?.data.id}/credits?${apiKey}&language=pt-BR&fields=cast`
       );
-      /* console.log(response4.data.cast) */
       const infoActor = response4.data.cast.filter(
         (value) => value.id != undefined
       );
       setCast(infoActor);
-       
+
       // filmes semelhantes
       const response5 = await api.get(
-        `/movie/${route.params?.data.id}/similar?${apiKey}&page=${1}&language=pt-BR`
+        `/movie/${
+          route.params?.data.id
+        }/similar?${apiKey}&page=${1}&language=pt-BR`
       );
-      console.log(response5.data);
-      setMovieSimilar(response5.data.results)
+      setMovieSimilar(response5.data.results);
     };
     LoadRunTime();
-  }, []);
+     
+
+    // se o favorite começar como true, ele vai retornar false, e vice-versa.
+    const handleFavorite = () => {
+      setFavorite(!favorite)
+    };
+
+    navigation.setOptions({
+      title: route.params?.data
+        ? route.params?.data.title
+        : "Detalhes do filme",
+      headerRight: () => (
+        <TouchableOpacity onPress={handleFavorite}>
+          {favorite ? (
+            <AntDesign name="heart" size={25} color="red" />
+          ) : (
+            <AntDesign name="hearto" size={25} color="white" />
+          )}
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation, route.params?.data, favorite]);
 
   return (
     <View style={styles.container}>
@@ -128,10 +155,8 @@ const styles = StyleSheet.create({
   },
   imageDetail: {
     width: width,
-    /* borderRadius: 10, */
-    height: 400,
-    resizeMode: "stretch",
-    marginTop: 0,
+    height: 250,
+    resizeMode: "cover",
     marginBottom: 20,
   },
   containerInfoMovie: {

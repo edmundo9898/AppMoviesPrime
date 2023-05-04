@@ -40,8 +40,8 @@ export default function Home() {
       <StatusBar />
       <LogoApp />
       <ScrollView>
-        <MovieList data={moviePoupular} title="Filmes Populares" />
         <MovieList data={movieNowPlaying} title="Filmes em cartaz" />
+        <MovieList data={moviePoupular} title="Filmes Populares" />
         <MovieList data={movieUpComingList} title="Próximas Estreias" />
       </ScrollView>
     </View>
