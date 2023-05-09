@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { View, StyleSheet, Text, StatusBar, ScrollView } from "react-native";
 import Api from "../../services/api";
 import apiKey from "../../services/apikey";
@@ -27,12 +28,14 @@ export default function Home() {
 
       // Próximas Estreais
       const response3 = await Api.get(
-        `/movie/upcoming?${apiKey}&page=${2}&language=pt-BR`
+        `/movie/upcoming?${apiKey}&page=${1}&language=pt-BR`
       );
       setMovieUpComingList(response3.data.results);
     };
 
+  
     loadApi();
+  
   }, []);
 
   return (

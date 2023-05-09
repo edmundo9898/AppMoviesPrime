@@ -6,6 +6,8 @@ export default function Favorite() {
  return (
    <View style={styles.container}>
     <Text style={styles.text}>Favorite</Text>
+    
+    
    </View>
   )
 }
@@ -15,7 +17,6 @@ const styles = StyleSheet.create({
     container:{
         flex: 1,
         alignItems: 'center',
-        justifyContent: 'center',
         backgroundColor: Color.background,
     },
     text:{

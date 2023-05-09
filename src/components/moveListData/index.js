@@ -29,6 +29,7 @@ const styles = StyleSheet.create({
     width: 120,
     height: 180,
     borderRadius: 15,
+    resizeMode: 'cover',
   },
 });
 

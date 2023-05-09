@@ -8,7 +8,7 @@ import {
   ScrollView,
   Dimensions,
   TouchableOpacity,
-  Pressable
+  Pressable,
 } from "react-native";
 import Color from "../../utils/color";
 import ActorList from "../../components/actorList";
@@ -17,12 +17,13 @@ import { useRoute, useNavigation } from "@react-navigation/native";
 import api from "../../services/api";
 import apiKey from "../../services/apikey";
 import { AntDesign } from "@expo/vector-icons";
+import { saveFavorite, removeFavorite } from "../../storage";
 const { width } = Dimensions.get("window");
 
 export default function Detail() {
   const route = useRoute();
   // const uri é onde está buscando a imagem do filme
-  const uriImage = `https://image.tmdb.org/t/p/original/${route.params?.data.backdrop_path}`;
+  const uriImage = `https://image.tmdb.org/t/p/w780/${route.params?.data.backdrop_path}`;
   const [runtime, setRuntime] = useState(null);
   const [genres, setGenres] = useState([]);
   const [director, setDirector] = useState([]);
@@ -83,12 +84,6 @@ export default function Detail() {
       setMovieSimilar(response5.data.results);
     };
     LoadRunTime();
-     
-
-    // se o favorite começar como true, ele vai retornar false, e vice-versa.
-    const handleFavorite = () => {
-      setFavorite(!favorite)
-    };
 
     navigation.setOptions({
       title: route.params?.data
@@ -105,6 +100,17 @@ export default function Detail() {
       ),
     });
   }, [navigation, route.params?.data, favorite]);
+
+  // se o favorite começar como true, ele vai retornar false, e vice-versa.
+  const handleFavorite = async (movie) => {
+    if (favorite) {
+      await removeFavorite(movie.id);
+      setFavorite(false);
+    } else {
+      await saveFavorite("@AppMovies", movie);
+      setFavorite(true);
+    }
+  };
 
   return (
     <View style={styles.container}>
