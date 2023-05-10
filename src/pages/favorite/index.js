@@ -1,11 +1,47 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, FlatList } from 'react-native';
 import Color from '../../utils/color';
+import MovieFavoriteList from '../../components/movieFavoriteList';
 
 export default function Favorite() {
+
+    const listFake = [
+        {   
+            id: '1',
+            name: "Teste1",
+            avatar: "https://img.elo7.com.br/product/zoom/2368C5D/big-poster-filme-marvel-venom-tamanho-90x60-cm-loot-op-010-geek.jpg"
+        },{
+            id: '2',
+            name: "Teste2",
+            avatar: "https://img.elo7.com.br/product/zoom/2368C5D/big-poster-filme-marvel-venom-tamanho-90x60-cm-loot-op-010-geek.jpg"
+        },{
+            id: '3',
+            name: "Teste3",
+            avatar: "https://img.elo7.com.br/product/zoom/2368C5D/big-poster-filme-marvel-venom-tamanho-90x60-cm-loot-op-010-geek.jpg"
+        },{
+            id: '4',
+            name: "Teste4",
+            avatar: "https://img.elo7.com.br/product/zoom/2368C5D/big-poster-filme-marvel-venom-tamanho-90x60-cm-loot-op-010-geek.jpg"
+        },{   
+            id: '5',
+            name: "Teste1",
+            avatar: "https://img.elo7.com.br/product/zoom/2368C5D/big-poster-filme-marvel-venom-tamanho-90x60-cm-loot-op-010-geek.jpg"
+        },{   
+            id: '6',
+            name: "Teste1",
+            avatar: "https://img.elo7.com.br/product/zoom/2368C5D/big-poster-filme-marvel-venom-tamanho-90x60-cm-loot-op-010-geek.jpg"
+        },]
  return (
    <View style={styles.container}>
-    <Text style={styles.text}>Favorite</Text>
+    <Text style={styles.text}>Favorites</Text>
+   
+   <FlatList
+   style={styles.flatlistStyle}
+   data={listFake}
+   keyExtractor={(item) => String(item.id)}
+   renderItem={({item}) => <MovieFavoriteList dataListFake={item}/>}
+   />
+    
     
     
    </View>
@@ -16,14 +52,21 @@ export default function Favorite() {
 const styles = StyleSheet.create({
     container:{
         flex: 1,
+        width: '100%',
         alignItems: 'center',
         backgroundColor: Color.background,
+        paddingTop: 10,
     },
     text:{
         color: Color.text,
-        fontSize: 20,
+        fontSize: 25,
         fontWeight: 'bold',
+    },
+    flatlistStyle:{
+        width: '100%',
+        marginTop: 15,
     }
+
     
 
 })

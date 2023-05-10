@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useLayoutEffect } from "react";
 import {
   View,
   Text,
@@ -7,7 +7,6 @@ import {
   StatusBar,
   ScrollView,
   Dimensions,
-  TouchableOpacity,
   Pressable,
 } from "react-native";
 import Color from "../../utils/color";
@@ -38,7 +37,7 @@ export default function Detail() {
   const year = new Date(releaseData).getFullYear();
   // puxando apenas o ano do lançamento do filme
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const LoadRunTime = async () => {
       // duração do filme
       const response1 = await api.get(
@@ -90,13 +89,13 @@ export default function Detail() {
         ? route.params?.data.title
         : "Detalhes do filme",
       headerRight: () => (
-        <TouchableOpacity onPress={handleFavorite}>
+        <Pressable onPress={() => handleFavorite(route.params?.data)}>
           {favorite ? (
             <AntDesign name="heart" size={25} color="red" />
           ) : (
             <AntDesign name="hearto" size={25} color="white" />
           )}
-        </TouchableOpacity>
+        </Pressable>
       ),
     });
   }, [navigation, route.params?.data, favorite]);

@@ -6,9 +6,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const saveFavorite = async (key, newMovie) => {
   try {
-    let myFavorites = await getFavorites(key);
+    const myFavorites = await getFavorites(key);
 
-    let hasMovie = myFavorites.some((item) => item.id === newMovie);
+    const hasMovie = myFavorites.some((item) => item.id === newMovie);
     if (hasMovie) {
       console.log("Esse filme já está favoritado");
       return;
@@ -28,16 +28,24 @@ export const getFavorites = async (key) => {
 
 export const removeFavorite = async (id) => {
   try {
-    let myFavorites = getFavorites("@AppMovies");
+    const myFavorites = await getFavorites("@AppMovies");
 
-    let removeMovieFavorite = myFavorites.filter((mov) => mov.id !== id);
+    const removeMovieFavorite = myFavorites.filter((mov) => mov.id !== id);
 
-    await AsyncStorage.setItem(
-      "AppMovies",
-      JSON.stringify(removeMovieFavorite)
+    await AsyncStorage.setItem("@AppMovies", JSON.stringify(removeMovieFavorite)
     );
     console.log("Filme removido!!");
+    return myFavorites;
   } catch (error) {
     console.log("ERROR", error);
   }
 };
+
+
+export const movieIsFavorite = async (movie) => {
+  const myMovieFavorite = getFavorites("@AppMovies");
+
+  
+
+
+}
