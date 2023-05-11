@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, Image } from "react-native";
-import { getFavorites } from "../../storage";
+import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import color from "../../utils/color";
 
-export default function movieFavoriteList({ dataListFake }) {
+export default function MovieFavoriteList({ dataListFake }) {
+  const uri = `https://image.tmdb.org/t/p/w500/${dataListFake.poster_path}`;
   return (
-    <View style={styles.container}>
-      <Image style={styles.imageAvatar} source={{ uri: dataListFake.avatar }} />
+    <TouchableOpacity style={styles.container}>
+      <Image style={styles.imageAvatar} source={{ uri }} />
       <View style={styles.ContainerinfoMovie}>
-        <Text style={styles.nameMovie}>{dataListFake.name}</Text>
+        <Text style={styles.nameMovie}>{dataListFake.title}</Text>
 
         <Text style={styles.genresMovie}>Ação</Text>
         <Text style={styles.dateMovie}>??/??/??</Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
 

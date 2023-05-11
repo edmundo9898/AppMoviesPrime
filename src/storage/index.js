@@ -13,9 +13,9 @@ export const saveFavorite = async (key, newMovie) => {
       console.log("Esse filme já está favoritado");
       return;
     }
+    myFavorites.push(newMovie);
 
     await AsyncStorage.setItem(key, JSON.stringify(myFavorites));
-    console.log("Filme Favoritado com Sucesso!");
   } catch (error) {
     console.log("ERROR", error);
   }
@@ -30,9 +30,11 @@ export const removeFavorite = async (id) => {
   try {
     const myFavorites = await getFavorites("@AppMovies");
 
-    const removeMovieFavorite = myFavorites.filter((mov) => mov.id !== id);
+    const removeMovieFavorite = myFavorites.filter((mov) => mov.id != id);
 
-    await AsyncStorage.setItem("@AppMovies", JSON.stringify(removeMovieFavorite)
+    await AsyncStorage.setItem(
+      "@AppMovies",
+      JSON.stringify(removeMovieFavorite)
     );
     console.log("Filme removido!!");
     return myFavorites;
@@ -41,11 +43,18 @@ export const removeFavorite = async (id) => {
   }
 };
 
+export const movieIsFavorite = async (movieId) => {
+  try {
+    const movieFavorites = await getFavorites("@AppMovies");
 
-export const movieIsFavorite = async (movie) => {
-  const myMovieFavorite = getFavorites("@AppMovies");
+    const isFavorite = movieFavorites.some((item) => item.id === movieId.id);
 
-  
-
-
-}
+    if (isFavorite) {
+      return true;
+    }
+    return false;
+  } catch (error) {
+    console.log("ERROR", error);
+    throw error;
+  }
+};

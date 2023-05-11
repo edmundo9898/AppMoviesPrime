@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect } from "react";
+import React, { useState, useLayoutEffect, useEffect } from "react";
 import {
   View,
   Text,
@@ -16,7 +16,7 @@ import { useRoute, useNavigation } from "@react-navigation/native";
 import api from "../../services/api";
 import apiKey from "../../services/apikey";
 import { AntDesign } from "@expo/vector-icons";
-import { saveFavorite, removeFavorite } from "../../storage";
+import { saveFavorite, removeFavorite, movieIsFavorite } from "../../storage";
 const { width } = Dimensions.get("window");
 
 export default function Detail() {
@@ -37,7 +37,7 @@ export default function Detail() {
   const year = new Date(releaseData).getFullYear();
   // puxando apenas o ano do lançamento do filme
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const LoadRunTime = async () => {
       // duração do filme
       const response1 = await api.get(
@@ -83,6 +83,12 @@ export default function Detail() {
       setMovieSimilar(response5.data.results);
     };
     LoadRunTime();
+
+    const checkStatusFavorite = async () => {
+      const isFavorite = await movieIsFavorite(route.params?.data);
+      setFavorite(isFavorite);
+    };
+    checkStatusFavorite();
 
     navigation.setOptions({
       title: route.params?.data
