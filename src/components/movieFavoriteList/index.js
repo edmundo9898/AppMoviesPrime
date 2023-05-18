@@ -4,6 +4,7 @@ import color from "../../utils/color";
 
 export default function MovieFavoriteList({ dataListFake }) {
   const uri = `https://image.tmdb.org/t/p/w500/${dataListFake.poster_path}`;
+  const dateMovie = dataListFake.release_date
   return (
     <TouchableOpacity style={styles.container}>
       <Image style={styles.imageAvatar} source={{ uri }} />
@@ -11,7 +12,7 @@ export default function MovieFavoriteList({ dataListFake }) {
         <Text style={styles.nameMovie}>{dataListFake.title}</Text>
 
         <Text style={styles.genresMovie}>Ação</Text>
-        <Text style={styles.dateMovie}>??/??/??</Text>
+        <Text style={styles.dateMovie}>{dateMovie}</Text>
       </View>
     </TouchableOpacity>
   );

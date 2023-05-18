@@ -16,6 +16,7 @@ export const saveFavorite = async (key, newMovie) => {
     myFavorites.push(newMovie);
 
     await AsyncStorage.setItem(key, JSON.stringify(myFavorites));
+    console.log("Filme favoritado")
   } catch (error) {
     console.log("ERROR", error);
   }
@@ -47,7 +48,7 @@ export const movieIsFavorite = async (movieId) => {
   try {
     const movieFavorites = await getFavorites("@AppMovies");
 
-    const isFavorite = movieFavorites.some((item) => item.id === movieId.id);
+    const isFavorite = movieFavorites.find((item) => item.id === movieId.id);
 
     if (isFavorite) {
       return true;

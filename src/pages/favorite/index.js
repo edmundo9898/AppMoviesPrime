@@ -3,66 +3,30 @@ import { View, Text, StyleSheet, FlatList } from "react-native";
 import Color from "../../utils/color";
 import MovieFavoriteList from "../../components/movieFavoriteList";
 import { getFavorites } from "../../storage";
+import { useIsFocused } from "@react-navigation/native";
 
 export default function Favorite() {
   const [moviesFavorites, setMoviesFavorites] = useState([]);
-
+  const isFocused = useIsFocused();
   useEffect(() => {
     const getMoviesFavorites = async () => {
-      const favorites = await getFavorites("@AppMovies");
-      console.log(favorites)
+      if (isFocused) {
+        const favorites = await getFavorites("@AppMovies");
 
-      setMoviesFavorites(favorites);
+        setMoviesFavorites(favorites);
+      }
     };
 
     getMoviesFavorites();
-  }, []);
+  }, [isFocused]);
 
-  /* const listFake = [
-    {
-      id: "1",
-      name: "Teste1",
-      avatar:
-        "https://img.elo7.com.br/product/zoom/2368C5D/big-poster-filme-marvel-venom-tamanho-90x60-cm-loot-op-010-geek.jpg",
-    },
-    {
-      id: "2",
-      name: "Teste2",
-      avatar:
-        "https://img.elo7.com.br/product/zoom/2368C5D/big-poster-filme-marvel-venom-tamanho-90x60-cm-loot-op-010-geek.jpg",
-    },
-    {
-      id: "3",
-      name: "Teste3",
-      avatar:
-        "https://img.elo7.com.br/product/zoom/2368C5D/big-poster-filme-marvel-venom-tamanho-90x60-cm-loot-op-010-geek.jpg",
-    },
-    {
-      id: "4",
-      name: "Teste4",
-      avatar:
-        "https://img.elo7.com.br/product/zoom/2368C5D/big-poster-filme-marvel-venom-tamanho-90x60-cm-loot-op-010-geek.jpg",
-    },
-    {
-      id: "5",
-      name: "Teste1",
-      avatar:
-        "https://img.elo7.com.br/product/zoom/2368C5D/big-poster-filme-marvel-venom-tamanho-90x60-cm-loot-op-010-geek.jpg",
-    },
-    {
-      id: "6",
-      name: "Teste1",
-      avatar:
-        "https://img.elo7.com.br/product/zoom/2368C5D/big-poster-filme-marvel-venom-tamanho-90x60-cm-loot-op-010-geek.jpg",
-    },
-  ]; */
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Favorites</Text>
 
       <FlatList
         style={styles.flatlistStyle}
-        data={moviesFavorites}
+        data={moviesFavorites.reverse()}
         keyExtractor={(item) => String(item.id)}
         renderItem={({ item }) => <MovieFavoriteList dataListFake={item} />}
       />
