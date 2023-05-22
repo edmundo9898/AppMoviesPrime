@@ -8,11 +8,12 @@ import {
   FlatList,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import FakeTest from "../../components/fakeTest";
-import FakeTestList from "../../components/fakeTestList";
 import api from "../../services/api";
 import apiKey from "../../services/apikey";
 import color from "../../utils/color";
+import MovieFavoriteList from "../../components/movieFavoriteList";
+
+// /search/movie?include_adult=false&language=en-US&page=1'
 
 export default function Search() {
   const [search, setSearch] = useState("");
@@ -23,14 +24,24 @@ export default function Search() {
    2- quando pesquisar mostra todos os resultados que foi colocado no campo input  */
 
   useEffect(() => {
-    if (search === "") {
-      setSearchResult([]);
-    } else {
-      const result = FakeTest.filter((item) =>
-        item.name.toLowerCase().indexOf(search.toLowerCase()) !== -1
-      );
-      setSearchResult(result);
-    }
+    const searchMovie = async () => {
+      if (search === "") {
+        setSearchResult([]);
+      } else {
+        const response = await api.get(
+          `search/movie?${apiKey}&language=pt-BR&query=${encodeURIComponent(
+            search
+          )}`
+        );
+        const result = response.data.results.filter(
+          (item) =>
+            item.original_title.toLowerCase().indexOf(search.toLowerCase()) !==
+            -1
+        );
+        setSearchResult(result);
+      }
+    };
+    searchMovie();
   }, [search]);
   return (
     <View style={styles.container}>
@@ -48,17 +59,19 @@ export default function Search() {
 
       {searchResult.length > 0 ? (
         <FlatList
-         showsVerticalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
           data={searchResult}
           keyExtractor={(item) => String(item.id)}
-          renderItem={({ item }) => <FakeTestList data={item} />}
+          renderItem={({ item }) => (
+            <MovieFavoriteList dataSearchAndMovie={item} />
+          )}
         />
       ) : (
-        <View>
+        <View style={styles.containerNoMovie}>
           {search !== "" ? (
-            <Text>Nenhum filme encontrado</Text>
+            <Text style={styles.textNoMovie}>Nenhum filme encontrado</Text>
           ) : (
-            <Text>Digite um filme</Text>
+            <Text style={styles.textNoMovie}>Digite um filme</Text>
           )}
         </View>
       )}
@@ -70,16 +83,16 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: color.background,
     flex: 1,
-    paddingTop: 15,
+    paddingTop: 25,
+    alignItems: 'center',
     width: "100%",
-    padding: 20,
   },
   title: {
     color: color.text,
     fontSize: 20,
   },
   containerSearch: {
-    width: "100%",
+    width: "90%",
     height: 45,
     flexDirection: "row",
     borderRadius: 10,
@@ -96,5 +109,16 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginRight: 10,
+  },
+  containerNoMovie: {
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "center",
+    flex: 1,
+  },
+  textNoMovie: {
+    fontSize: 20,
+    color: color.text,
+    fontWeight: "bold",
   },
 });

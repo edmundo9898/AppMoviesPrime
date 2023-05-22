@@ -1,15 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import color from "../../utils/color";
+import { useNavigation } from "@react-navigation/native";
 
-export default function MovieFavoriteList({ dataListFake }) {
-  const uri = `https://image.tmdb.org/t/p/w500/${dataListFake.poster_path}`;
-  const dateMovie = dataListFake.release_date
+export default function MovieFavoriteList({ dataSearchAndMovie }) {
+
+  const navigation = useNavigation();
+  const uri = `https://image.tmdb.org/t/p/w500/${dataSearchAndMovie.poster_path}`;
+  const dateMovie = dataSearchAndMovie.release_date
+
+   const handleDetail = () => {
+    navigation.navigate("Detail", {data: dataSearchAndMovie})
+   }
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity onPress={handleDetail} style={styles.container}>
       <Image style={styles.imageAvatar} source={{ uri }} />
       <View style={styles.ContainerinfoMovie}>
-        <Text style={styles.nameMovie}>{dataListFake.title}</Text>
+        <Text style={styles.nameMovie}>{dataSearchAndMovie .title}</Text>
 
         <Text style={styles.genresMovie}>Ação</Text>
         <Text style={styles.dateMovie}>{dateMovie}</Text>

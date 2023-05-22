@@ -28,7 +28,7 @@ export default function Favorite() {
         style={styles.flatlistStyle}
         data={moviesFavorites.reverse()}
         keyExtractor={(item) => String(item.id)}
-        renderItem={({ item }) => <MovieFavoriteList dataListFake={item} />}
+        renderItem={({ item }) => <MovieFavoriteList dataSearchAndMovie={item} />}
       />
     </View>
   );
