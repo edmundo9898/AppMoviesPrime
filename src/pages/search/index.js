@@ -13,15 +13,13 @@ import apiKey from "../../services/apikey";
 import color from "../../utils/color";
 import MovieFavoriteList from "../../components/movieFavoriteList";
 
-// /search/movie?include_adult=false&language=en-US&page=1'
 
 export default function Search() {
   const [search, setSearch] = useState("");
 
   const [searchResult, setSearchResult] = useState([]);
 
-  /* 1- antes de pesquisar, que ele apareça somente que não tem filme encotrado
-   2- quando pesquisar mostra todos os resultados que foi colocado no campo input  */
+
 
   useEffect(() => {
     const searchMovie = async () => {
@@ -39,9 +37,15 @@ export default function Search() {
             -1
         );
         setSearchResult(result);
-      }
+      };
+
+     
     };
-    searchMovie();
+    if(search.trim() !== ""){
+      searchMovie();
+    }else{
+      setSearchResult([]);
+    }
   }, [search]);
   return (
     <View style={styles.container}>

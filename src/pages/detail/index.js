@@ -32,29 +32,19 @@ export default function Detail() {
 
   const navigation = useNavigation();
 
-  // puxando apenas o ano do lançamento do filme
   const releaseData = route.params?.data.release_date;
   const year = new Date(releaseData).getFullYear();
-  // puxando apenas o ano do lançamento do filme
+
 
   useEffect(() => {
     const LoadRunTime = async () => {
-      // duração do filme
       const response1 = await api.get(
         `/movie/${route.params?.data.id}?${apiKey}&language=pt-BR`
       );
+
       setRuntime(response1.data.runtime);
+      setGenres(response1.data.genres);
 
-      // Gênero do filme
-      const response2 = await api.get(
-        `/movie/${route.params?.data.id}?${apiKey}&language=pt-BR`
-      );
-      setGenres(response2.data.genres);
-
-      // Diretor do filme
-      /* o filter está filtrando se o trabalho da pessoa é de diretor, 
-          é retornado o array de informações dos diretores */
-      // o map está retornando apenas os nomes deles no array
       const response3 = await api.get(
         `/movie/${route.params?.data.id}/credits?${apiKey}&language=pt-BR`
       );
@@ -66,15 +56,11 @@ export default function Detail() {
       const directorName = directors.map((value) => value.name);
       setDirector(directorName);
 
-      const response4 = await api.get(
-        `/movie/${route.params?.data.id}/credits?${apiKey}&language=pt-BR&fields=cast`
-      );
-      const infoActor = response4.data.cast.filter(
+      const infoActor = response3.data.cast.filter(
         (value) => value.id != undefined
       );
       setCast(infoActor);
 
-      // filmes semelhantes
       const response5 = await api.get(
         `/movie/${
           route.params?.data.id
