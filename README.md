@@ -5,9 +5,13 @@ O Aplicativo AppMoviesPrime foi desenvolvido como um desafio para praticar o con
 
 ## Screenshots
 
-| Home | Detail |
-|--------|-------|
-| ![Tela 1](https://github.com/edmundo9898/AppMoviesPrime/assets/89991197/9a3d1d59-7758-46d6-84cf-8de948593e5a) | ![image 1](https://github.com/edmundo9898/AppMoviesPrime/assets/89991197/2ace5817-7b12-48ea-8e3d-3f44117e59ec) ![image 2](https://github.com/edmundo9898/AppMoviesPrime/assets/89991197/f243c149-39ea-4361-8c25-942014880a4a) |  
+| Home | 
+|--------
+| ![Tela 1](https://github.com/edmundo9898/AppMoviesPrime/assets/89991197/9a3d1d59-7758-46d6-84cf-8de948593e5a) 
+
+| Detail |
+|--------|
+![image 1](https://github.com/edmundo9898/AppMoviesPrime/assets/89991197/2ace5817-7b12-48ea-8e3d-3f44117e59ec) ![image 2](https://github.com/edmundo9898/AppMoviesPrime/assets/89991197/f243c149-39ea-4361-8c25-942014880a4a) |  
 
 | Favorites | Search |
 |--------|-------|
